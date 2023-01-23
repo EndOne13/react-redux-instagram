@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 const UserBadge = ({nickName, avatarUrl, id}) => {
     const navigate = useNavigate()
 
+    console.log(nickName)
     const onUserBadgeClick = () => {
         navigate(`/${id}`)
     }
