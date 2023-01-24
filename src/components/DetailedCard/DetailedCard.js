@@ -5,10 +5,9 @@ import Comment from "../Comment/Comment";
 import cn from "classnames";
 import {nanoid} from "nanoid";
 
-const DetailedCard = ({userName, avatarUrl, userId, imgUrl, likes,isLikeByYou, comments, className}) => {
+const DetailedCard = ({userName, avatarUrl, userId, imgUrl, likes,isLikeByYou, comments, className, onLikeClick, id}) => {
 
     const [isCommentsShown, setIsCommentsShown] = useState(false)
-    console.log(userName)
     const renderComments = () => {
         if(comments.length > 2 && !isCommentsShown) {
             const commentsCopy = [...comments]
@@ -22,7 +21,7 @@ const DetailedCard = ({userName, avatarUrl, userId, imgUrl, likes,isLikeByYou, c
             )
         }
 
-        return  comments.map(comment => <Comment{...comment} />)
+        return  comments.map(comment => <Comment{...comment} key={Math.random()}/>)
 
     }
 
@@ -40,7 +39,7 @@ const DetailedCard = ({userName, avatarUrl, userId, imgUrl, likes,isLikeByYou, c
                 <img src={imgUrl} alt="img" className='cnDetailedCardImg'/>
             </div>
             <div className='cnDetailedCardButtons'>
-                <i className={`${isLikeByYou ? 'fa-solid' : 'fa-regular'} fa-heart cnDetailedCardIconLike`}/>
+                <i className={`${isLikeByYou ? 'fa-solid' : 'fa-regular'} fa-heart cnDetailedCardIconLike`} onClick={() => onLikeClick(id)}/>
                 <i className="fa-solid fa-comment cnDetailedCardIconComment" />
             </div>
             <div className='cnDetailedCardLikes'>

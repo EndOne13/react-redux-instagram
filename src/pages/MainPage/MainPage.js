@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Layout from "../../components/Layout/Layout";
 import DetailedCard from "../../components/DetailedCard/DetailedCard";
 import {useDispatch, useSelector} from "react-redux";
-import {getPhotos} from "../../redux/action/photos";
+import {getPhotos, mutatePhoto} from "../../redux/action/photos";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import './style.css'
@@ -13,6 +13,7 @@ const MainPage = () => {
     const photos = useSelector(state => state.photos.photos)
     const loading = useSelector(state => state.photos.isPhotosLoading)
     const total = useSelector(state => state.photos.totalPhotos)
+    const authorizedUser = useSelector(state => state.users.authorizedUser)
     const dispatch = useDispatch()
 
     console.log(photos)
@@ -26,9 +27,13 @@ const MainPage = () => {
         setPage(page + 1)
     }
 
+    const onLikeClick = (photoId) => {
+        dispatch(mutatePhoto(authorizedUser.id, photoId))
+    }
+
     return (
 
-        <Layout nickName='Djoni' id={1}>
+        <Layout nickName={authorizedUser.nickname} id={authorizedUser.id} avatarUrl={authorizedUser.avatarUrl}>
             <div className='cnMainPageRoot'>
                 {loading ? (<div className="cnMainLoaderContainer">
                     <Bars color="#000BFF" height={80} width={80}/>
@@ -42,15 +47,16 @@ const MainPage = () => {
                 >
                     {photos.map(({author, imgUrl, id, likes, comments}) => (<DetailedCard
                         key={id}
+                        id={id}
                         className='cnMainPageCard'
                         userName={author.nickname}
                         avatarUrl={author.avatarUrl}
                         userId={author.id}
                         imgUrl={imgUrl}
                         likes={likes.length}
-                        isLikeByYou={true}
+                        isLikeByYou={likes.includes(authorizedUser.id)}
                         comments={comments}
-
+                        onLikeClick={onLikeClick}
                     />))}
                 </InfiniteScroll>}
             </div>
