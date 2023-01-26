@@ -4,3 +4,16 @@
     align-items: center;
     padding-top: 50px;
 }
+
+.cnUserPageRootContent {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 100px;
+    padding-left: 10px;
+    width: 930px;
+}
+
+.cnUserPageCard {
+    margin-bottom: 10px;
+    margin-right: 10px;
+}

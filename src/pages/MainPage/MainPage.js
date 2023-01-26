@@ -40,9 +40,7 @@ const MainPage = () => {
 
         <Layout nickName={authorizedUser.nickname} id={authorizedUser.id} avatarUrl={authorizedUser.avatarUrl}>
             <div className='cnMainPageRoot'>
-                {loading ? (<div className="cnMainLoaderContainer">
-                    <Bars color="#000BFF" height={80} width={80}/>
-                </div>) : <InfiniteScroll
+                <InfiniteScroll
                     dataLength={photos.length}
                     next={nextHandler}
                     hasMore={photos.length < total}
@@ -65,7 +63,7 @@ const MainPage = () => {
                         onCommentSendClick={onCommentSendClick}
                         isMutateLoading={isMutateLoading}
                     />))}
-                </InfiniteScroll>}
+                </InfiniteScroll>
             </div>
         </Layout>);
 };
