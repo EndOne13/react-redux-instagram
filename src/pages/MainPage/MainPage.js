@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Layout from "../../components/Layout/Layout";
 import DetailedCard from "../../components/DetailedCard/DetailedCard";
 import {useDispatch, useSelector} from "react-redux";
-import {getPhotos, mutatePhoto} from "../../redux/action/photos";
+import {getPhotos, sendComment, toggleLike} from "../../redux/action/photos";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import './style.css'
@@ -14,6 +14,7 @@ const MainPage = () => {
     const loading = useSelector(state => state.photos.isPhotosLoading)
     const total = useSelector(state => state.photos.totalPhotos)
     const authorizedUser = useSelector(state => state.users.authorizedUser)
+    const isMutateLoading = useSelector(state => state.photos.isMutateLoading)
     const dispatch = useDispatch()
 
     console.log(photos)
@@ -28,7 +29,11 @@ const MainPage = () => {
     }
 
     const onLikeClick = (photoId) => {
-        dispatch(mutatePhoto(authorizedUser.id, photoId))
+        dispatch(toggleLike(authorizedUser.id, photoId))
+    }
+
+    const onCommentSendClick = (photoId, comment) => {
+        dispatch(sendComment(authorizedUser.nickname, photoId, comment))
     }
 
     return (
@@ -57,6 +62,8 @@ const MainPage = () => {
                         isLikeByYou={likes.includes(authorizedUser.id)}
                         comments={comments}
                         onLikeClick={onLikeClick}
+                        onCommentSendClick={onCommentSendClick}
+                        isMutateLoading={isMutateLoading}
                     />))}
                 </InfiniteScroll>}
             </div>

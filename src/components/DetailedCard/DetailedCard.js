@@ -5,9 +5,31 @@ import Comment from "../Comment/Comment";
 import cn from "classnames";
 import {nanoid} from "nanoid";
 
-const DetailedCard = ({userName, avatarUrl, userId, imgUrl, likes,isLikeByYou, comments, className, onLikeClick, id}) => {
+const DetailedCard = ({
+                          userName,
+                          avatarUrl,
+                          userId,
+                          imgUrl,
+                          likes,
+                          isLikeByYou,
+                          comments,
+                          className,
+                          onLikeClick,
+                          id,
+                          onCommentSendClick,
+                          isMutateLoading
+}) => {
 
     const [isCommentsShown, setIsCommentsShown] = useState(false)
+    const [comment, setComment] = useState('')
+
+    const handleSendCommentClick = () => {
+        if (comment) {
+            onCommentSendClick(id, comment)
+            setComment('')
+        }
+    }
+
     const renderComments = () => {
         if(comments.length > 2 && !isCommentsShown) {
             const commentsCopy = [...comments]
@@ -48,7 +70,17 @@ const DetailedCard = ({userName, avatarUrl, userId, imgUrl, likes,isLikeByYou, c
             <div className='cnDetailedCardComments'>
                 {renderComments()}
             </div>
-            <textarea className='cnDetailedCardTextArea' />
+           <div className='cnDetailedCardTextAreaWrapper'>
+               <textarea
+                   value={comment}
+                   onChange={e => setComment(e.target.value)}
+                   className='cnDetailedCardTextArea'
+                   placeholder='Введите комментарий'/>
+               <button
+                   disabled={isMutateLoading}
+                   className='cnDetailedCardSendButton'
+                   onClick={() => handleSendCommentClick()}>Отправить</button>
+           </div>
         </div>
     );
 };
