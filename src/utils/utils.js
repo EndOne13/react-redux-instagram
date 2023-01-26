@@ -4,7 +4,7 @@ export const getPhotoFromState = (photos, photoId) => {
     return {...photo}
 }
 
-export const getUpdatedPhotoForState = (photos, photoId, data) => {
+export const getUpdatedPhotoFromState = (photos, photoId, data) => {
     const newPhotos = [...photos]
     const photoIndex = newPhotos.findIndex((photo => photo.id === photoId))
     newPhotos[photoIndex] = data;

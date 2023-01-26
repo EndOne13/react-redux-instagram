@@ -1,18 +1,26 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Layout from "../../components/Layout/Layout";
 import {useDispatch, useSelector} from "react-redux";
 
 import './style.css'
 import UserBio from "../../components/UserBio/UserBio";
 import Card from "../../components/Card/Card";
-import {toggleLike} from "../../redux/action/photos";
+import {getPostsByUser, toggleLikeOnPost} from "../../redux/action/postsByUser";
+import {useParams} from "react-router-dom";
 
 const UserPage = () => {
-    const authorizedUser = useSelector(state => state.users.authorizedUser)
     const dispatch = useDispatch()
+    const authorizedUser = useSelector(state => state.users.authorizedUser)
+    const posts = useSelector(state => state.postsByUser.posts)
+    const params = useParams()
+
+    useEffect(() => {
+        dispatch(getPostsByUser(params.id))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     const onLikeClick = (photoId) => {
-        dispatch(toggleLike(authorizedUser.id, photoId))
+        dispatch(toggleLikeOnPost(authorizedUser.id, photoId, params.id))
     }
 
     return (
@@ -30,9 +38,15 @@ const UserPage = () => {
                 />
 
                 <div className='cnUserPageRootContent'>
-                    <Card imgUrl='' className='cnUserPageCard' likes={10} comments={5} isLikeByYou={true} onLikeClick={() => onLikeClick('')}/>
-                    <Card imgUrl='' className='cnUserPageCard' likes={10} comments={5} isLikeByYou={false}/>
-                    <Card imgUrl='' className='cnUserPageCard' likes={10} comments={5} isLikeByYou={false}/>
+                    {posts.map(({comments, likes, imgUrl, id}) =>
+                        <Card
+                            imgUrl={imgUrl}
+                            className='cnUserPageCard'
+                            likes={likes.length}
+                            comments={comments.length}
+                            isLikeByYou={likes.includes(authorizedUser.id)}
+                            onLikeClick={() => onLikeClick(id)}
+                        />)}
                 </div>
             </div>
         </Layout>

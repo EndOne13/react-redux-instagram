@@ -6,7 +6,7 @@ import {
     setPhotosTotal
 } from "../actionCreators/photos";
 import {api} from "../../api/api";
-import {getPhotoFromState, getUpdatedPhotoForState} from "../../utils/utils";
+import {getPhotoFromState, getUpdatedPhotoFromState} from "../../utils/utils";
 
 
 export const getPhotos = (page = 1) => {
@@ -55,7 +55,7 @@ export const toggleLike = (userId, photoId) => {
                 data : newPhoto,
               url: `/${photoId}`
             })
-            const newPhotos = getUpdatedPhotoForState(state.photos.photos, photoId, response.data)
+            const newPhotos = getUpdatedPhotoFromState(state.photos.photos, photoId, response.data)
 
             dispatch(getPhotosSuccess(newPhotos))
         } catch (error) {
@@ -78,7 +78,7 @@ export const sendComment = (nickname, photoId, text) => {
                 url: `/${photoId}`
             })
 
-            const newPhotos = getUpdatedPhotoForState(state.photos.photos, photoId, response.data)
+            const newPhotos = getUpdatedPhotoFromState(state.photos.photos, photoId, response.data)
 
             dispatch(getPhotosSuccess(newPhotos))
             dispatch(mutatePhotosSuccess())
