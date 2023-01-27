@@ -17,3 +17,14 @@
     margin-bottom: 10px;
     margin-right: 10px;
 }
+
+.cnUserPageScroll {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cnUserPageNotPost {
+    margin: auto;
+    font-weight: 700;
+    font-size: 50px;
+}

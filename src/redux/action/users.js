@@ -1,5 +1,12 @@
 import {api} from "../../api/api";
-import {getAuthorizedUserSuccess, getUserFailed, getUserStarted, getUserSuccess} from "../actionCreators/users";
+import {
+    getAuthorizedUserFailed,
+    getAuthorizedUserStarted,
+    getAuthorizedUserSuccess,
+    getUserFailed,
+    getUserStarted,
+    getUserSuccess
+} from "../actionCreators/users";
 
 export const getUser = (id) => {
     return async (dispatch) => {
@@ -17,13 +24,13 @@ export const getUser = (id) => {
 export const getAuthorizedUser = () => {
     return async (dispatch) => {
         try {
-            dispatch(getUserStarted());
+            dispatch(getAuthorizedUserStarted());
             const response = await api.users.getUser(1);
 
             dispatch(getAuthorizedUserSuccess(response.data));
 
         } catch (error) {
-            dispatch(getUserFailed(error));
+            dispatch(getAuthorizedUserFailed(error));
         }
     };
 };

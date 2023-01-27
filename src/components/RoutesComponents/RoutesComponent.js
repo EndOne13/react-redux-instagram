@@ -17,7 +17,7 @@ const authorizedRoutes = [
 const RoutesComponent = () => {
     const dispatch = useDispatch()
     const authorizedUser = useSelector(state => state.users.authorizedUser)
-    const isLoading = useSelector(state => state.users.isUserLoading)
+    const isLoading = useSelector(state => state.users.isAuthorizedUserLoading)
     console.log(authorizedUser)
     console.log(isLoading)
 
