@@ -1,6 +1,7 @@
 import {getPostsFailed, getPostsStarted, getPostsSuccess} from "../actionCreators/postsByUser";
 import {api} from "../../api/api";
-import {getPhotoFromState} from "../../utils/utils";
+import {getPhotoFromState, getUpdatedPhotoFromState, getUserPagePostData} from "../../utils/utils";
+import {getPhotosSuccess, mutatePhotosFailed, mutatePhotosStarted, mutatePhotosSuccess} from "../actionCreators/photos";
 
 export const getPostsByUser = (userId) => {
     return async (dispatch) => {
@@ -21,25 +22,52 @@ export const getPostsByUser = (userId) => {
 
 export const toggleLikeOnPost = (userId, postId, postAuthorId) => {
     return async (dispatch, getState) => {
-        const posts = getState().postsByUser.posts
+        try {
+            const posts = getState().postsByUser.posts;
+            const { postForEdit, newPosts } = getUserPagePostData(posts, postId);
 
-        const newPosts = [...posts]
-        const newPostIndex = posts.findIndex(post => post.id === postId)
-        const postForEdit = newPosts[newPostIndex]
-
-        if (postForEdit.likes.includes(userId)) {
-            postForEdit.likes = postForEdit.likes.filter(like => like !== userId)
-        } else {
-            postForEdit.likes.push(userId)
-        }
-
-        await api.postsByUser.mutatePosts({
-            url: `/${postAuthorId}`,
-            data: {
-                id: postAuthorId,
-                posts: newPosts
+            if (postForEdit.likes.includes(userId)) {
+                postForEdit.likes = postForEdit.likes.filter(like => like !== userId);
+            } else {
+                postForEdit.likes.push(userId);
             }
-        })
-        dispatch(getPostsSuccess(newPosts))
+
+            const response = await api.postsByUser.mutatePosts({
+                url: `/${postAuthorId}`,
+                data: {
+                    id: postAuthorId,
+                    posts: newPosts
+                }
+            });
+
+            dispatch(getPostsSuccess([...response.data.posts]));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};
+
+export const sendCommentOnUserPage = (nickname, postId, postAuthorId, text) => {
+    return async (dispatch, getState) => {
+        dispatch(mutatePhotosStarted())
+        const posts = getState().postsByUser.posts
+        const {postForEdit, newPosts} = getUserPagePostData(posts, postId)
+
+        postForEdit.comments.push({nickname, text})
+
+        try {
+            const response =  await api.postsByUser.mutatePosts({
+                url: `/${postAuthorId}`,
+                data: {
+                    id: postAuthorId,
+                    posts: newPosts
+                }
+            })
+
+            dispatch(getPhotosSuccess([...response.data.posts]))
+            dispatch(mutatePhotosSuccess())
+        } catch (error) {
+            dispatch(mutatePhotosFailed(error));
+        }
     }
 }

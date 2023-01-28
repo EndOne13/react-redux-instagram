@@ -18,14 +18,10 @@ const RoutesComponent = () => {
     const dispatch = useDispatch()
     const authorizedUser = useSelector(state => state.users.authorizedUser)
     const isLoading = useSelector(state => state.users.isAuthorizedUserLoading)
-    console.log(authorizedUser)
-    console.log(isLoading)
-
 
 
     useEffect(() => {
         dispatch(getAuthorizedUser())
-        console.log('useEffect')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

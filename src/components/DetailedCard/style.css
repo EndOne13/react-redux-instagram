@@ -37,15 +37,7 @@
     padding: 0 10px 10px 10px;
 }
 
-.cnDetailedCardTextArea {
-    box-sizing: border-box;
-    border: none;
-    background-color: white;
-    padding: 10px;
-    outline: none;
-    resize: none;
-    width: 80%;
-}
+
 
 .cnDetailedCardIconLike {
     margin-right: 10px;
@@ -62,10 +54,7 @@
     cursor: pointer;
 }
 
-.cnDetailedCardTextAreaWrapper{
-    position: relative;
-    background: white;
-}
+
 
 .cnDetailedCardSendButton {
     position: absolute;

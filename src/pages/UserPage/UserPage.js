@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import './style.css'
 import UserBio from "../../components/UserBio/UserBio";
 import Card from "../../components/Card/Card";
-import {getPostsByUser, toggleLikeOnPost} from "../../redux/action/postsByUser";
+import {getPostsByUser, sendCommentOnUserPage, toggleLikeOnPost} from "../../redux/action/postsByUser";
 import {useParams} from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {Bars} from "react-loader-spinner";
@@ -16,11 +16,10 @@ const UserPage = () => {
     const authorizedUser = useSelector(state => state.users.authorizedUser)
     const isUserLoading = useSelector(state => state.users.isUserLoading)
     const isPostLoading = useSelector(state => state.postsByUser.isPostsLoading)
+    const isMutateLoading = useSelector(state => state.photos.isMutateLoading)
     const user = useSelector(state => state.users.user)
     const posts = useSelector(state => state.postsByUser.posts)
-    const params = useParams()
-
-    console.log(posts)
+    const {id} = useParams()
 
     const [postsForRender, setPostsForRender] = useState([])
     const [page, setPage] = useState(1)
@@ -33,14 +32,18 @@ const UserPage = () => {
     }, [posts])
 
     useEffect(() => {
-        dispatch(getPostsByUser(params.id))
-        dispatch(getUser(params.id))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        dispatch(getPostsByUser(id))
+        dispatch(getUser(id))
+    }, [id])
 
     const onLikeClick = (photoId) => {
-        dispatch(toggleLikeOnPost(authorizedUser.id, photoId, params.id))
+        dispatch(toggleLikeOnPost(authorizedUser.id, photoId, id))
     }
+
+    const onCommentSendClick = (photoId, comment) => {
+        dispatch(sendCommentOnUserPage(authorizedUser.nickname, photoId, user.id, comment))
+    }
+
 
     function nextHandler() {
         const newPost = [...posts]
@@ -65,6 +68,8 @@ const UserPage = () => {
                         lastName={user.lastName}
                         description={user.description}
                         url={user.url}
+                        isMyPage={id == authorizedUser.id}
+                        isSubscribed={user.subscribers.includes(authorizedUser.id)}
                     />
 
                     <div className='cnUserPageRootContent'>
@@ -85,9 +90,16 @@ const UserPage = () => {
                                     imgUrl={imgUrl}
                                     className='cnUserPageCard'
                                     likes={likes.length}
-                                    comments={comments.length}
+                                    comments={comments}
                                     isLikeByYou={likes.includes(authorizedUser.id)}
                                     onLikeClick={() => onLikeClick(id)}
+                                    userData={{
+                                        userName: user.nickname,
+                                        avatarUrl: user.avatarUrl,
+                                        userId: user.id
+                                    }}
+                                    onCommentSubmit={(comment) => onCommentSendClick(id, comment)}
+                                    isMutateLoading={isMutateLoading}
                                 />)
                             }
                         </InfiniteScroll> : <p className='cnUserPageNotPost'>User not have posts!</p>}

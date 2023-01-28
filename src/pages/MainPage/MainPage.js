@@ -17,9 +17,6 @@ const MainPage = () => {
     const isMutateLoading = useSelector(state => state.photos.isMutateLoading)
     const dispatch = useDispatch()
 
-    console.log(photos)
-    console.log(loading)
-
     useEffect(() => {
         dispatch(getPhotos(page))
     }, [page])
